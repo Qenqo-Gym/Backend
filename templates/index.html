@@ -1,4 +1,10 @@
-<h1>Hello World!</h1>
+{% extends 'base.html' %}
 
-<p>{{ stuff|safe }}</p>
-<p>probando {{ first_name }}</p>
+{% block content %}
+
+    <h1>Hello World!</h1>
+
+    <p>{{ stuff|safe }}</p>
+    <p>probando {{ first_name }}</p>
+
+{% endblock %}
