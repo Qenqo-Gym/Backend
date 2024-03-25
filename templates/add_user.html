@@ -13,7 +13,8 @@
     <table class ="table table-hover table-bordered table-striped">
         {% for our_user in our_users %}
             <tr>
-            <td>{{ our_user.id }}. <a href="#">{{ our_user.nombre }}</a> - {{ our_user.email }}</td>
+            <td>{{ our_user.id }}. <a href="{{ url_for('update_users', usr_id = our_user.usr_id) }}">{{ our_user.nombre }}</a> - {{ our_user.email }} - 
+            <a href="{{ url_for('delete_user', usr_id = our_user.usr_id) }}">Eliminar</a></td>
             </tr>
         {% endfor %}
     </table>
@@ -85,7 +86,8 @@
 <table class ="table table-hover table-bordered table-striped">
 {% for our_user in our_users %}
     <tr>
-    <td>{{ our_user.id }} - {{ our_user.nombre }} - {{ our_user.email }}</td>
+    <td>{{ our_user.usr_id }}. <a href="{{ url_for('update_users', usr_id = our_user.usr_id) }}">{{ our_user.nombre }}</a> - {{ our_user.email }} - 
+        <a href="{{ url_for('delete_user', usr_id = our_user.usr_id) }}">Eliminar</a></td>
     </tr>
 {% endfor %}
 </table>

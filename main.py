@@ -6,6 +6,7 @@ from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
 from flask_swagger_ui import get_swaggerui_blueprint
+from werkzeug.security import  generate_password_hash, check_password_hash
 
 #Instancia de Flask
 app = Flask(__name__)
@@ -44,19 +45,30 @@ db = SQLAlchemy(app)
 
 class Usuarios(db.Model): #Creamos tabla usuarios
     usr_id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(200),nullable = False)# TEXT NOT NULL,
-    apellido = db.Column(db.String(200),nullable = False)#TEXT NOT NULL,
-    edad = db.Column(db.Integer,nullable = False) #INTEGER NOT NULL,
-    peso = db.Column(db.Numeric,nullable = False) #INTEGER NOT NULL,
-    altura = db.Column(db.Numeric,nullable = False) #REAL NOT NULL,
-    sexo = db.Column(db.String(255),nullable = False) #TEXT NOT NULL,
-    direc = db.Column(db.String(200),nullable = False) #TEXT NOT NULL,
-    telefono = db.Column(db.Integer,nullable = False) #INTEGER NOT NULL,
-    contraseña = db.Column(db.String(200),nullable = False) #TEXT NOT NULL,
-    email = db.Column(db.String(120),nullable = False, unique = True) #TEXT NOT NULL,
+    nombre = db.Column(db.String(200),nullable = False)
+    apellido = db.Column(db.String(200),nullable = False)
+    edad = db.Column(db.Integer,nullable = False) 
+    peso = db.Column(db.Numeric,nullable = False) 
+    altura = db.Column(db.Numeric,nullable = False) 
+    sexo = db.Column(db.String(255),nullable = False) 
+    direc = db.Column(db.String(200),nullable = False) 
+    telefono = db.Column(db.Integer,nullable = False)
+    #Consideracion Hash 
+    contraseña = db.Column(db.String(200),nullable = False) #con hash
+    email = db.Column(db.String(120),nullable = False, unique = True)
     id_paquete = db.Column(db.Integer) #TEXT,
-    fecha_inicio = db.Column(db.DateTime,default=datetime.now(timezone.utc)) #TEXT,
+    fecha_inicio = db.Column(db.DateTime,default=datetime.now(timezone.utc))
 
+    @property
+    def password(self): #sin hash
+        raise AttributeError('La contraseña no es un atributo legible')
+    @password.setter
+    def password(self, password):
+        self.contraseña = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.contraseña, password)
+    
     def __repr__(self):
         return '<Name %r>' % self.nombre
 
@@ -113,12 +125,20 @@ def add_user():
     return render_template("add_user.html", form = form,name = name, our_users = our_users) #el parametro our_users y toda su lógica es olo para mostrarlo en vivo
 
 #Actualizar Users
-@app.route('/update_users/<int:id>',methods=['GET','POST'])
-def update_users(id):
+@app.route('/update_users/<int:usr_id>',methods=['GET','POST'])
+def update_users(usr_id):
     form = UserForm()
-    name_to_update = Usuarios.query.get_or_404(id)
+    name_to_update = Usuarios.query.get_or_404(usr_id)
     if request.method == 'POST':
-        name_to_update.name = request.form['name']
+        name_to_update.nombre = request.form['name']
+        name_to_update.apellido = request.form['lastname']
+        name_to_update.edad = request.form['age']
+        name_to_update.peso = request.form['weight']
+        name_to_update.altura = request.form['height']
+        name_to_update.sexo = request.form['sex']
+        name_to_update.direc = request.form['address']
+        name_to_update.telefono = request.form['phone']
+        name_to_update.contraseña = request.form['password']
         name_to_update.email = request.form['email']
         try:
             db.session.commit()
@@ -135,6 +155,22 @@ def update_users(id):
         return render_template('update_users.html',
                                form = form,
                                name_to_update = name_to_update)
+    
+@app.route('/delete_user/<int:usr_id>')
+def delete_user(usr_id):
+    user_to_delete = Usuarios.query.get_or_404(usr_id)
+    name = None
+    form = UserForm()
+    try:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash("Se ha eliminado el usuario correctamente.")
+        our_users = Usuarios.query.order_by(Usuarios.fecha_inicio)
+        return render_template("add_user.html", form = form,name = name, our_users = our_users)
+    except:
+        flash("No se pudo eliminar el usuario.")
+        our_users = Usuarios.query.order_by(Usuarios.fecha_inicio)
+        return render_template("add_user.html", form = form,name = name, our_users = our_users)
 
 #Decorador de ruta
 @app.route('/')
