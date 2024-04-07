@@ -1,0 +1,2 @@
+class ExcepcionPersonalizada(Exception):
+    pass
