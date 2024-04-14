@@ -14,10 +14,10 @@ class ServicioAuth():
             connection = get_connection()
             authenticated_user = None
             with connection.cursor() as cursor:
-                cursor.execute('call sp_verifyIdentity(%s, %s)', (user.username, user.password))
+                cursor.execute('call sp_verifyIdentity(%s, %s)', (user.email, user.contraseña))
                 row = cursor.fetchone()
                 if row != None:
-                    authenticated_user = Usuarios(int(row[0]), row[1], None, row[2])
+                    authenticated_user = Usuarios(None, None,None, None,None, None,None, None,None,row[2],row[1],None,None,None,None,None)
             connection.close()
             return authenticated_user
         except ExcepcionPersonalizada as ex:

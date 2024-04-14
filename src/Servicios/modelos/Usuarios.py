@@ -2,7 +2,8 @@ class Usuarios():
 
     def __init__(self, id, nombre, apellido, edad, 
                  peso,altura, sexo, direc, telefono, 
-                 contraseña, email, id_paquete, fecha_inicio, admin) -> None:
+                 contraseña, email, id_paquete, 
+                 fecha_inicio, tipo_usr,cod_turno,espec) -> None:
         self.id = id
         self.nombre = nombre
         self.apellido = apellido
@@ -16,7 +17,9 @@ class Usuarios():
         self.email = email
         self.id_paquete = id_paquete
         self.fecha_inicio = fecha_inicio
-        self.admin = admin
+        self.tipo_usr = tipo_usr
+        self.cod_turno = cod_turno
+        self.espec = espec
 
     def to_json(self):
         return {
@@ -33,5 +36,7 @@ class Usuarios():
             'email': self.email,
             'id_paquete': self.id_paquete,
             'fecha_inicio': self.fecha_inicio,
-            'admin': self.admin
+            'tipo_usr': self.tipo_usr,
+            'cod_turno' : self.cod_turno,
+            'espec' : self.espec
         }

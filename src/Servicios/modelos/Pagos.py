@@ -1,7 +1,7 @@
 class Pagos():
 
-    def __init__(self,id_pagos,usr_id,id_paquete,fecha,monto) -> None:
-        self.id_pagos=id_pagos
+    def __init__(self,id_pago,usr_id,id_paquete,fecha,monto) -> None:
+        self.id_pago=id_pago
         self.usr_id=usr_id
         self.id_paquete=id_paquete
         self.fecha=fecha

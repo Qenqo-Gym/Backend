@@ -12,10 +12,10 @@ main = Blueprint('auth_blueprint', __name__)
 
 @main.route('/', methods=['POST'])
 def login():
-    username = request.json['username']
-    password = request.json['password']
+    email = request.json['email']
+    contraseña = request.json['contraseña']
 
-    _user = Usuarios(0, username, password, None)
+    _user = Usuarios(None, None,None, None,None, None,None, None,None, contraseña,email,None,None,None,None,None)
     authenticated_user = ServicioAuth.login_user(_user)
 
     if (authenticated_user != None):

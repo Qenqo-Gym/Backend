@@ -7,11 +7,11 @@ from src.Utils.Security import Security
 # Services
 from src.Servicios.ServicioUsuarios import ServicioUsuarios
 
-main = Blueprint('language_blueprint', __name__)
+main = Blueprint('usuario_blueprint', __name__)
 
 
 @main.route('/')
-def get_languages():
+def get_usuarios():
     has_access = Security.verify_token(request.headers)
 
     if has_access:
@@ -26,3 +26,20 @@ def get_languages():
     else:
         response = jsonify({'message': 'Unauthorized'})
         return response, 401
+
+@main.route("/<int:id>")
+def get_usuario_by_id(id):
+    has_access = Security.verify_token(request.headers)
+    
+    if has_access:
+        usuario = ServicioUsuarios.get_usuario_by_id(id)
+        
+        if usuario is not None:
+            return jsonify({"usuario": usuario, "message": "SUCCESS"})
+        else:
+            return jsonify({"message":"NOEXISTE"}), 404
+    else:
+        return jsonify({"message":"Unauthorized"}), 401
+
+#@main.route("/crear", methods=['POST'])
+#def crear_usuario():
