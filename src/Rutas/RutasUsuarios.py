@@ -41,5 +41,18 @@ def get_usuario_by_id(id):
     else:
         return jsonify({"message":"Unauthorized"}), 401
 
+@main.route("/<int:tipo_usr>")
+def get_usuario_tipo_id(tipo_usr):
+    has_access = Security.verify_token(request.headers)
+    
+    if has_access:
+        usuarios = ServicioUsuarios.get_usuario_tipo_id(tipo_usr)
+        
+        if (len(usuarios) > 0):
+            return jsonify({"usuarios": usuarios, "message": "SUCCESS"})
+        else:
+            return jsonify({"message":"NOEXISTE"}), 404
+    else:
+        return jsonify({"message":"Unauthorized"}), 401
 #@main.route("/crear", methods=['POST'])
 #def crear_usuario():
