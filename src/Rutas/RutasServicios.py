@@ -37,7 +37,7 @@ def get_servicio_by_id(id_serv):
         if servicio is not None:
             return jsonify({"servicio": servicio, "message": "SUCCESS"})
         else:
-            return jsonify({"message":"No existe ese Usuario"}), 404
+            return jsonify({"message":"No existe ese Servicio"}), 404
     else:
         return jsonify({"message":"Unauthorized"}), 401
 
@@ -45,7 +45,7 @@ def get_servicio_by_id(id_serv):
 def crear_servicio():
     nombre = request.json['nombre']
     descripcion_serv = request.json['descripcion_serv']
-    flg_activo = False
+    flg_activo = request.json['flg_activo']
 
     #que los campos no sean nulos se puede manejar con el front (required o en formwtf)
     # Verificamos que el correo no exista en la base de datos
@@ -55,25 +55,18 @@ def crear_servicio():
         ServicioServicios.crear_servicio(servicio)
         return jsonify({"message":"Se ha registrado correctamente."}),201
     else:
-        return jsonify({"message":"El correo ya existe en nuestros registros."}), 500
+        return jsonify({"message":"El servicio ya existe en nuestros registros."}), 500
 
 @main.route("/actualizar/<int:id_serv>", methods=['GET','PUT'])
 def actualizar_datos(id_serv):
     has_access = Security.verify_token(request.headers)
-    nombre = request.json['nombre']
-    apellido = request.json['apellido']
-    edad = request.json['edad']
-    peso = request.json['peso']
-    altura = request.json['altura']
-    sexo = request.json['sexo']
-    direc  = request.json['direc']
-    telefono = request.json['telefono']
+    flg_activo = request.json['flg_activo']
 
     if has_access:
-        servicio = [id_serv,nombre,apellido,edad,peso,altura,sexo,direc,telefono]
+        servicio = [id_serv,flg_activo]
         servicio = ServicioServicios.update_servicio(servicio)
         if servicio == True:
-            return jsonify({"message": "Usuario ha sido actualizado exitosamente"})
+            return jsonify({"message": "Servicio ha sido actualizado exitosamente"})
         else:
             return jsonify({"message":"No existe el servicio que se desea actualizar"}), 404
     else:
