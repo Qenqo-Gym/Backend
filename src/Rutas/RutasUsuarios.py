@@ -70,7 +70,7 @@ def crear_usuario():
 
     #que los campos no sean nulos se puede manejar con el front (required o en formwtf)
     if contraseña != contraseña_conf:
-        return jsonify({"message":"Las contraseñas no coinciden","timezone":datetime.datetime.now(tz=pytz.timezone('America/Lima')).isoformat()})
+        return jsonify({"message":"Las contraseñas no coinciden"})
     else:
         # Verificamos que el correo no exista en la base de datos
         usuario = [nombre,apellido,contraseña,email]

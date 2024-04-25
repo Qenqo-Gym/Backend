@@ -93,3 +93,21 @@ class ServicioServicios():
             return flg
         except ExcepcionPersonalizada as ex:
             raise ExcepcionPersonalizada(ex)
+    
+    @classmethod
+    def delete_servicio(cls, id_serv):
+        try:
+            connection = get_connection()
+            flg = False
+            with connection.cursor() as cursor:
+                cursor.execute('call sp_Servicio_id(%s)',(id_serv))
+                resultset = cursor.fetchall()
+                if len(resultset)>0:
+                    cursor.execute('call sp_Eliminar_servicio(%s)',
+                                    (id_serv))
+                    connection.commit()
+                    flg=True
+            connection.close()
+            return flg
+        except ExcepcionPersonalizada as ex:
+            raise ExcepcionPersonalizada(ex)

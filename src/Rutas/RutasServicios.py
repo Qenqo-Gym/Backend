@@ -71,3 +71,16 @@ def actualizar_datos(id_serv):
             return jsonify({"message":"No existe el servicio que se desea actualizar"}), 404
     else:
         return jsonify({"message":"Unauthorized"}), 401
+    
+@main.route("/eliminar/<int:id_serv>", methods=['DELETE'])
+def eliminar_datos(id_serv):
+    has_access = Security.verify_token(request.headers)
+
+    if has_access:
+        servicio = ServicioServicios.delete_servicio(id_serv)
+        if servicio == True:
+            return jsonify({"message": "Servicio ha sido eliminado exitosamente"})
+        else:
+            return jsonify({"message":"No existe el servicio que se desea eliminar"}), 404
+    else:
+        return jsonify({"message":"Unauthorized"}), 401

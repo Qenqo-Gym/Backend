@@ -6,7 +6,10 @@ from src.Utils.Errores.ExcepcionPersonalizada import ExcepcionPersonalizada
 from src.Utils.Security import Security
 # Services
 from src.Servicios.ServicioPagos import ServicioPagos
-
+#timezone
+import datetime
+#pytz
+import pytz
 main = Blueprint('pago_blueprint', __name__)
 
 
@@ -27,52 +30,22 @@ def get_pagos():
     else:
         response = jsonify({'message': 'Unauthorized'})
         return response, 401
-    
-@main.route("/<int:id>")
-def get_pago_by_id(id):
+
+@main.route("/crear/<int:usr_id>", methods=['GET','POST'])
+def crear_pago(usr_id):
     has_access = Security.verify_token(request.headers)
-    
+    monto = request.json['monto']
+    fecha = datetime.datetime.now(tz=pytz.timezone('America/Lima')).isoformat()
+    pago = [usr_id,fecha,monto]
     if has_access:
-        pago = ServicioPagos.get_pago_by_id(id)
-        
-        if pago is not None:
-            return jsonify({"pago": pago, "message": "SUCCESS"})
-        else:
-            return jsonify({"message":"No existe ese Usuario"}), 404
+        try:
+            pagos = ServicioPagos.crear_pago(pago)
+            if pagos == True:
+                return jsonify({'pagos': pagos, 'message': "Se registró el pago correctamente", 'success': True})
+            else:
+                return jsonify({'message': "El usuario no fue encontrado", 'success': True})
+        except ExcepcionPersonalizada:
+            return jsonify({'message': "ERROR", 'success': False})
     else:
-        return jsonify({"message":"Unauthorized"}), 401
-
-@main.route("/tipo_pago/<int:tipo_usr>")
-def get_pago_tipo_id(tipo_usr):
-    has_access = Security.verify_token(request.headers)
-    
-    if has_access:
-        pagos = ServicioPagos.get_pago_tipo_id(tipo_usr)
-        
-        if (len(pagos) > 0):
-            return jsonify({"pagos": pagos, "message": "SUCCESS"})
-        else:
-            return jsonify({"message":"No existe ese tipo de pago"}), 404
-    else:
-        return jsonify({"message":"Unauthorized"}), 401
-
-@main.route("/crear", methods=['GET','POST'])
-def crear_pago():
-    nombre = request.json['nombre']
-    apellido = request.json['apellido']
-    email = request.json['email']
-    contraseña = request.json['contraseña']
-    contraseña_conf = request.json['contraseña_conf']
-
-    #que los campos no sean nulos se puede manejar con el front (required o en formwtf)
-    if contraseña != contraseña_conf:
-        return jsonify({"message":"Las contraseñas no coinciden","timezone":datetime.datetime.now(tz=pytz.timezone('America/Lima')).isoformat()})
-    else:
-        # Verificamos que el correo no exista en la base de datos
-        pago = [nombre,apellido,contraseña,email]
-        busqueda_pago = ServicioPagos.verif_pago_unico(email)
-        if busqueda_pago == True:
-            ServicioPagos.crear_pago(pago,datetime.datetime.now(tz=pytz.timezone('America/Lima')).isoformat())
-            return jsonify({"message":"Se ha registrado correctamente."}),201
-        else:
-            return jsonify({"message":"El correo ya existe en nuestros registros."}), 500
+        response = jsonify({'message': 'Unauthorized'})
+        return response, 401
