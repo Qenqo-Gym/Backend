@@ -39,7 +39,7 @@ def crear_pago(usr_id):
     pago = [usr_id,fecha,monto]
     if has_access:
         try:
-            pagos = ServicioPagos.crear_pago(pago)
+            pagos = ServicioPagos.crear_pago_unico(pago)
             if pagos == True:
                 return jsonify({'pagos': pagos, 'message': "Se registró el pago correctamente", 'success': True})
             else:

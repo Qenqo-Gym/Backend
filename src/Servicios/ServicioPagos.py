@@ -25,7 +25,7 @@ class ServicioPagos():
             raise ExcepcionPersonalizada(ex)
     
     @classmethod
-    def crear_pago(cls, pago):
+    def crear_pago_unico(cls, pago):
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
