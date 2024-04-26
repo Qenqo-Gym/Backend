@@ -28,7 +28,7 @@ class ServicioMembresias():
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                    cursor.execute('call sp_creacion_membresia(%s,%s,%s)'
+                    cursor.execute('call sp_creacion_membresia(%s,%s,%s,%s,%s,%s)'
                                    ,(membresia[0],membresia[1],membresia[2],
                                      membresia[3],membresia[4],membresia[5]))
             connection.commit()
