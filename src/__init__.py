@@ -6,6 +6,7 @@ from .Rutas import RutasUsuarios
 from .Rutas import RutasServicios
 from .Rutas import RutasHorarios
 from .Rutas import RutasPagos
+from .Rutas import RutasMembresias
 
 app = Flask(__name__)
 
@@ -20,4 +21,5 @@ def init_app(config):
     app.register_blueprint(RutasServicios.main, url_prefix='/servicios')
     app.register_blueprint(RutasHorarios.main, url_prefix='/horarios')
     app.register_blueprint(RutasPagos.main, url_prefix='/pagos')
+    app.register_blueprint(RutasMembresias.main, url_prefix='/membresias')
     return app

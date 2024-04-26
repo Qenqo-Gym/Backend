@@ -50,7 +50,7 @@ class ServicioMembresias():
                 cursor.execute('call sp_listaMembresias()')
                 resultset = cursor.fetchall()
                 for row in resultset:
-                    membresia = Membresias(int(row[0]), row[1], row[2], int(row[3]))
+                    membresia = Membresias(int(row[0]), row[1], row[2], row[3],row[4],row[5],row[6])
                     membresias.append(membresia.to_json())
             connection.close()
             return membresias

@@ -8,3 +8,14 @@ class Membresias():
         self.precio = precio
         self.duracion_meses = duracion_meses
         self.fecha_cobro = fecha_cobro
+    
+    def to_json(self):
+        return {
+            'id_paquete': self.id_paquete,
+            'nombre_membresia': self.nombre_membresia,
+            'descripcion': self.descripcion,
+            'status_activo': self.status_activo,
+            'precio': self.precio,
+            'duracion_meses': self.duracion_meses,  
+            'fecha_cobro': self.fecha_cobro
+        }

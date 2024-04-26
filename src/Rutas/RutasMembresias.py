@@ -29,14 +29,17 @@ def get_membresias():
 
 @main.route("/crear", methods=['GET','POST'])
 def crear_membresia():
-    nombre = request.json['nombre']
-    descripcion_serv = request.json['descripcion_serv']
-    flg_activo = request.json['flg_activo']
+    nombre_membresia = request.json['nombre_membresia']
+    descripcion = request.json['descripcion']
+    status_activo = request.json['status_activo']
+    precio = request.json['precio']
+    duracion_meses = request.json['duracion_meses']
+    dia_cobro = request.json['dia_cobro']
 
     #que los campos no sean nulos se puede manejar con el front (required o en formwtf)
     # Verificamos que el correo no exista en la base de datos
-    membresia = [nombre,descripcion_serv,flg_activo]
-    busqueda_membresia = ServicioMembresias.verif_membresia_unico(nombre)
+    membresia = [nombre_membresia,descripcion,status_activo,precio,duracion_meses,dia_cobro]
+    busqueda_membresia = ServicioMembresias.verif_membresia_unico(nombre_membresia)
     if busqueda_membresia == True:
         ServicioMembresias.crear_membresia(membresia)
         return jsonify({"message":"Se ha registrado correctamente."}),201
